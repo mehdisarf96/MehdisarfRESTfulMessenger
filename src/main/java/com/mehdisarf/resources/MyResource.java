@@ -1,4 +1,4 @@
-package com.mehdisarf;
+package com.mehdisarf.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
