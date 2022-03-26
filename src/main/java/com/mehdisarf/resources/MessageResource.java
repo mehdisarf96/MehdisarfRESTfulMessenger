@@ -3,10 +3,7 @@ package com.mehdisarf.resources;
 import com.mehdisarf.models.Message;
 import com.mehdisarf.services.MessageService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -21,6 +18,24 @@ public class MessageResource {
         return messageService.getAllMessages();
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Message createMessage(Message message) {
+
+        return messageService.addMessage(message);
+    }
+
+    /*
+    // temporary for test
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createMessage() {
+        return "Post Post";
+    }
+     */
+
     @GET
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -28,17 +43,5 @@ public class MessageResource {
         return messageService.getMessage(id);
     }
 
-    /*
-    @GET
-    @Path("/{messageId}")
-    @Produces(MediaType.APPLICATION_XML)
-    public Message getMessage(@PathParam("messageId") String id) {
-        return messageService.getMessage(Integer.parseInt(id));
-    }
-
-    // age type e method parameter e 'id' ro long bezari, jersey khodesh
-    // bahushe va conversion ro anjam mide. va dg niaz nist mese bala
-    // khodet biay dasti parse va convert ro anjam bedi.
-     */
 
 }
