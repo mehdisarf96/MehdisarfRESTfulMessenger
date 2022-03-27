@@ -12,7 +12,6 @@ import java.util.Map;
 public class MessageService {
 
     private Map<Long, Message> messages = MessageDAO.getMessages();
-    private Map<Long, Profile> profiles = MessageDAO.getProfiles();
 
     public List<Message> getAllMessages() {
         return new ArrayList<>(messages.values());
