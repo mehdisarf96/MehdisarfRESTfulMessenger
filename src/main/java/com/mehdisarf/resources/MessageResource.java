@@ -26,16 +26,6 @@ public class MessageResource {
         return messageService.addMessage(message);
     }
 
-    /*
-    // temporary for test
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public String createMessage() {
-        return "Post Post";
-    }
-     */
-
     @GET
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,5 +33,20 @@ public class MessageResource {
         return messageService.getMessage(id);
     }
 
+    @PUT
+    @Path("/{messageId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Message updateMessage(@PathParam("messageId") long id, Message message) {
 
+        message.setId(id);
+        return messageService.updateMessage(message);
+    }
+
+    @DELETE
+    @Path("/{messageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteMessage(@PathParam("messageId") long id) { // Jersey ba didane 'void', 204 barmigardune.
+        messageService.removeMessage(id);
+    }
 }
