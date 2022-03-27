@@ -4,10 +4,7 @@ import com.mehdisarf.dao.MessageDAO;
 import com.mehdisarf.models.Message;
 import com.mehdisarf.models.Profile;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MessageService {
 
@@ -19,6 +16,32 @@ public class MessageService {
 
     public Message getMessage(long id) {
         return messages.get(id);
+    }
+
+    public List<Message> getAllMessagesForYear(int year) {
+        List<Message> messagesForYear = new ArrayList<>();
+
+        // vase kar ba 'year' e message hamun, az calendar estefade.
+        // ba calendar rahat mituni Date ro besh bedi va vasat year esh ro birun bekeshe.
+        Calendar calendar = Calendar.getInstance();
+
+        for (Message message : messages.values()) {
+            calendar.setTime(message.getCreated());
+
+            if (calendar.get(Calendar.YEAR) == year)
+                messagesForYear.add(message);
+        }
+        return messagesForYear;
+    }
+
+    public List<Message> getAllMessagesPaginated(int startPoint, int size) {
+        List<Message> messageList = new ArrayList<>(messages.values());
+
+        if (startPoint + size > messageList.size())
+            return new ArrayList<>();
+
+        // ex: user mige st:3 sz:5 yani dar list az 2 ta 6. baraye in bayad subList(2,7)
+        return messageList.subList(startPoint - 1, (startPoint - 1) + size);
     }
 
     public Message addMessage(Message message) {

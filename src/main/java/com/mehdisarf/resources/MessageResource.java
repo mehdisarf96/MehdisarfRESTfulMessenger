@@ -13,8 +13,16 @@ public class MessageResource {
 
     private MessageService messageService = new MessageService();
 
+    // shoma age '/messages?harchizi' bezani, baz map mishe be hamin method.
     @GET
-    public List<Message> getMessages() {
+    public List<Message> getMessages(@QueryParam("year") int yrs,
+                                     @QueryParam("start") int strt,
+                                     @QueryParam("size") int sz) { // age chizi ersal nashode bashe, tabiatan chon int e, nemitune null esh kone. leza 0 mide.
+        if (yrs > 0)
+            return messageService.getAllMessagesForYear(yrs);
+        if (strt > 0 && sz > 0)
+            return messageService.getAllMessagesPaginated(strt, sz);
+
         return messageService.getAllMessages();
     }
 
