@@ -1,9 +1,11 @@
 package com.mehdisarf.dao;
 
 import com.mehdisarf.models.Message;
-import com.mehdisarf.models.Profile;
 
-import java.util.*;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageDAO { // Message DAO (Stub)
 
