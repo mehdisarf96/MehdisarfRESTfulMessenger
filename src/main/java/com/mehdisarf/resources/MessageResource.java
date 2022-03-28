@@ -1,6 +1,7 @@
 package com.mehdisarf.resources;
 
 import com.mehdisarf.models.Message;
+import com.mehdisarf.resources.beans.MessageFilterBean;
 import com.mehdisarf.services.MessageService;
 
 import javax.ws.rs.*;
@@ -13,15 +14,22 @@ public class MessageResource {
 
     private MessageService messageService = new MessageService();
 
-    // shoma age '/messages?harchizi' bezani, baz map mishe be hamin method.
+    /*
+    @BeanParam:
+    The annotation that may be used to inject custom JAX-RS "parameter aggregator" value object
+    into a resource class field, property or resource method parameter.
+    The JAX-RS runtime will instantiate the object and inject all it's fields and properties
+    annotated with either one of the @XxxParam annotation (@PathParam, @FormParam ...) or
+    the @Context annotation.
+    For the POJO classes same instantiation and injection rules apply as in case of
+    instantiation and injection of request-scoped root resource classes.
+     */
     @GET
-    public List<Message> getMessages(@QueryParam("year") int yrs,
-                                     @QueryParam("start") int strt,
-                                     @QueryParam("size") int sz) { // age chizi ersal nashode bashe, tabiatan chon int e, nemitune null esh kone. leza 0 mide.
-        if (yrs > 0)
-            return messageService.getAllMessagesForYear(yrs);
-        if (strt > 0 && sz > 0)
-            return messageService.getAllMessagesPaginated(strt, sz);
+    public List<Message> getMessages(@BeanParam MessageFilterBean filterBean) {
+        if (filterBean.getYrs() > 0)
+            return messageService.getAllMessagesForYear(filterBean.getYrs());
+        if (filterBean.getStrt() > 0 && filterBean.getSz() > 0)
+            return messageService.getAllMessagesPaginated(filterBean.getStrt(), filterBean.getSz());
 
         return messageService.getAllMessages();
     }
