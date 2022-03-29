@@ -61,4 +61,11 @@ public class MessageResource {
     public void deleteMessage(@PathParam("messageId") long id) { // Jersey ba didane 'void', 204 barmigardune.
         messageService.removeMessage(id);
     }
+
+    @Path("/{messageId}/comments")
+    // one of the way @Path may be used is on methods not annotated with resource method designators such as @GET or @POST.
+    // Such methods are referred to as sub-resource locators.
+    public CommentResource getCommentResource() { // the sub-resource locator method returns a new resource class.
+        return new CommentResource();
+    }
 }
