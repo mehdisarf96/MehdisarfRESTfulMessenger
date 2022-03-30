@@ -1,0 +1,9 @@
+there are some shortcut method for some of these standard status code;
+accepted(),created(),notModified(),ok() (status code e 200 bud ok)
+
+masalan bara 201 created, method e created() ro dare. created() ham status ro 201 mikone
+va ham ye header be esm e Location set mikone ke value esh address va location e instance jadidast.
+
+set both the status code 201 and the Location header of the new resource whenever u create any new resource.
+
+best practice baraye anjam hamzaman in 2 amaliat ine ke az created() estefade.

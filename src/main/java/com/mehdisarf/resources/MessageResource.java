@@ -6,6 +6,9 @@ import com.mehdisarf.services.MessageService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Path("/messages")
@@ -34,11 +37,26 @@ public class MessageResource {
         return messageService.getAllMessages();
     }
 
+    /*
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Message createMessage(Message message) {
 
         return messageService.addMessage(message);
+    }
+     */
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createMessage(Message message) throws URISyntaxException { // Return Type alan Response E; instead of Message ke ghablan bud.
+
+        // return messageService.addMessage(message);
+
+        Message newMessage = messageService.addMessage(message);
+
+        return Response.created(new URI("/Mehdisarf_RESTful_Messenger_war_exploded/webapi/messages/" + newMessage.getId())) // created(): set both the status code 201 and the Location header of the new resource whenever u create any new resource.
+                .entity(newMessage)
+                .build();
     }
 
     @GET
