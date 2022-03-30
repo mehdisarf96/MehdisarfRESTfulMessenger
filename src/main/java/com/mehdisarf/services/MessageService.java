@@ -1,6 +1,7 @@
 package com.mehdisarf.services;
 
 import com.mehdisarf.dao.MessageDAO;
+import com.mehdisarf.exceptions.DataNotFoundException;
 import com.mehdisarf.models.Message;
 import com.mehdisarf.models.Profile;
 
@@ -15,7 +16,10 @@ public class MessageService {
     }
 
     public Message getMessage(long id) {
-        return messages.get(id);
+        Message message = messages.get(id);
+        if (message == null)
+            throw new DataNotFoundException("Message With ID " + id + " Not Found.");
+        return message;
     }
 
     public List<Message> getAllMessagesForYear(int year) {
