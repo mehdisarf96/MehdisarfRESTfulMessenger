@@ -13,14 +13,32 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
-@Produces(MediaType.APPLICATION_JSON)
+
 @Path("/messages")
 public class MessageResource {
 
     private MessageService messageService = new MessageService();
 
     @GET
-    public List<Message> getMessages(@BeanParam MessageFilterBean filterBean) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Message> getJsonMessages(@BeanParam MessageFilterBean filterBean) {
+
+        System.out.println("JSON method called.");
+
+        if (filterBean.getYrs() > 0)
+            return messageService.getAllMessagesForYear(filterBean.getYrs());
+        if (filterBean.getStrt() > 0 && filterBean.getSz() > 0)
+            return messageService.getAllMessagesPaginated(filterBean.getStrt(), filterBean.getSz());
+
+        return messageService.getAllMessages();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    public List<Message> getXmlMessages(@BeanParam MessageFilterBean filterBean) {
+
+        System.out.println("XML method called.");
+
         if (filterBean.getYrs() > 0)
             return messageService.getAllMessagesForYear(filterBean.getYrs());
         if (filterBean.getStrt() > 0 && filterBean.getSz() > 0)
@@ -30,6 +48,7 @@ public class MessageResource {
     }
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMessage(Message message,
                                   @Context UriInfo uriInfo) { // Return Type alan Response E; instead of Message ke ghablan bud.
@@ -49,6 +68,7 @@ public class MessageResource {
 
     @GET
     @Path("/{messageId}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Message getMessage(@PathParam("messageId") long messageId,
                               @Context UriInfo uriInfo) {
 
@@ -74,12 +94,12 @@ public class MessageResource {
                 .path(MessageResource.class)
                 .path(MessageResource.class, "getCommentResource")
                 .path(CommentResource.class)
-                .resolveTemplate("messageId",messageId) // Resolve a URI template with a given name
+                .resolveTemplate("messageId", messageId) // Resolve a URI template with a given name
                 // in this UriBuilder instance using a supplied value.
                 // alan inja bejaye {messageId}, bayad actual value jaygozin beshe.
                 .build()
                 .toString();
-        Link link2 = new Link(uriComments,"comments");
+        Link link2 = new Link(uriComments, "comments");
         theMessage.getLinks().add(link2);
 
 
@@ -88,6 +108,7 @@ public class MessageResource {
 
     @PUT
     @Path("/{messageId}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML}) // inam be khast e dele khodam injur 2taii kardam ke ye mesal injur ham dashte basham.
     @Consumes(MediaType.APPLICATION_JSON)
     public Message updateMessage(@PathParam("messageId") long id, Message message) {
 
