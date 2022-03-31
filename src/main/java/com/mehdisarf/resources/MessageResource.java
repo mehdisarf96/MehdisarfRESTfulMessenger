@@ -1,5 +1,6 @@
 package com.mehdisarf.resources;
 
+import com.mehdisarf.models.Link;
 import com.mehdisarf.models.Message;
 import com.mehdisarf.resources.beans.MessageFilterBean;
 import com.mehdisarf.services.MessageService;
@@ -12,22 +13,12 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
-@Path("/messages")
 @Produces(MediaType.APPLICATION_JSON)
+@Path("/messages")
 public class MessageResource {
 
     private MessageService messageService = new MessageService();
 
-    /*
-    @BeanParam:
-    The annotation that may be used to inject custom JAX-RS "parameter aggregator" value object
-    into a resource class field, property or resource method parameter.
-    The JAX-RS runtime will instantiate the object and inject all it's fields and properties
-    annotated with either one of the @XxxParam annotation (@PathParam, @FormParam ...) or
-    the @Context annotation.
-    For the POJO classes same instantiation and injection rules apply as in case of
-    instantiation and injection of request-scoped root resource classes.
-     */
     @GET
     public List<Message> getMessages(@BeanParam MessageFilterBean filterBean) {
         if (filterBean.getYrs() > 0)
@@ -37,15 +28,6 @@ public class MessageResource {
 
         return messageService.getAllMessages();
     }
-
-    /*
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Message createMessage(Message message) {
-
-        return messageService.addMessage(message);
-    }
-     */
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -67,8 +49,41 @@ public class MessageResource {
 
     @GET
     @Path("/{messageId}")
-    public Message getMessage(@PathParam("messageId") long id) {
-        return messageService.getMessage(id);
+    public Message getMessage(@PathParam("messageId") long messageId,
+                              @Context UriInfo uriInfo) {
+
+        Message theMessage = messageService.getMessage(messageId);
+
+        String uri = uriInfo.getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(Long.toString(theMessage.getId()))
+                .build()
+                .toString();
+        Link link = new Link(uri, "self");
+        theMessage.getLinks().add(link);
+
+        String uriAuthor = uriInfo.getBaseUriBuilder()
+                .path(ProfileResource.class)
+                .path(theMessage.getAuthor())
+                .build()
+                .toString();
+        Link link1 = new Link(uriAuthor, "author");
+        theMessage.getLinks().add(link1);
+
+        String uriComments = uriInfo.getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(MessageResource.class, "getCommentResource")
+                .path(CommentResource.class)
+                .resolveTemplate("messageId",messageId) // Resolve a URI template with a given name
+                // in this UriBuilder instance using a supplied value.
+                // alan inja bejaye {messageId}, bayad actual value jaygozin beshe.
+                .build()
+                .toString();
+        Link link2 = new Link(uriComments,"comments");
+        theMessage.getLinks().add(link2);
+
+
+        return theMessage;
     }
 
     @PUT

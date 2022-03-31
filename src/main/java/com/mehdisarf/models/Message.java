@@ -2,9 +2,7 @@ package com.mehdisarf.models;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @XmlRootElement
 public class Message {
@@ -14,6 +12,7 @@ public class Message {
     private Date created;
     private String author;
     private Map<Long, Comment> comments = new HashMap<>();
+    private List<Link> links = new ArrayList<>();
 
     public Message() {
     }
@@ -64,5 +63,13 @@ public class Message {
 
     public void setComments(Map<Long, Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
     }
 }
